@@ -11,8 +11,8 @@ type IMW interface {
 type GinHook struct {
 	bhm *BeforeHandleMap
 	ahm *AfterHandleMap
-	fhm *FailHandlerMap  // 致命错误
-	ehm *ErrorHandlerMap // 所有错误
+	fhm *FailHandlerMap  // 致命错误 一般会处理http的响应结果
+	ehm *ErrorHandlerMap // 所有错误 一般实现逻辑是打印日志
 }
 
 func NewGinHook() *GinHook {
@@ -70,6 +70,7 @@ func (gh *GinHook) HandlerFunc() gin.HandlerFunc {
 				// 致命错误
 				gh.fhm.InvokeAll(hc, e2)
 				gh.ehm.InvokeAll(hc, e2, true)
+				c.Abort()
 				return false
 			}
 			return true
@@ -88,6 +89,7 @@ func (gh *GinHook) HandlerFunc() gin.HandlerFunc {
 				// 致命错误
 				gh.fhm.InvokeAll(hc, e2)
 				gh.ehm.InvokeAll(hc, e2, true)
+				c.Abort()
 				return false
 			}
 			return true

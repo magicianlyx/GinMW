@@ -19,7 +19,7 @@ type User struct {
 	AllPermission []string
 }
 
-// 获取需要的redis数据
+// 获取需要的部分user数据
 func (c *redisClient) GetUserInfo(phpsessid string) (*User, error) {
 	mss, err := c.client.HGetAll(phpsessid).Result()
 	if err != nil {

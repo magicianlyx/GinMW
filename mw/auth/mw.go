@@ -3,7 +3,7 @@ package auth
 import (
 	"github.com/go-redis/redis"
 	"github.com/gin-gonic/gin"
-	"ginHook/hook"
+	"git.corp.chaolian360.com/lrf123456/GinMW/hook"
 )
 
 type ErrorLogHandler func(err error, isDeadly bool)
@@ -18,7 +18,7 @@ type MWAccessControl struct {
 	// hjh     HijackHandler   // 拦截的非法访问http请求处理
 }
 
-func NewMWAccessControl(client *redis.Client, validator Validator, elh ErrorLogHandler, hjh HijackHandler) (*MWAccessControl, error) {
+func NewMWAccessControl(client *redis.Client, validator Validator, elh ErrorLogHandler, hjh HijackHandler) (*MWAccessControl) {
 	rds := InitRedis(client)
 	
 	mwac := &MWAccessControl{hook.NewGinHook(), rds}
@@ -83,7 +83,7 @@ func NewMWAccessControl(client *redis.Client, validator Validator, elh ErrorLogH
 		elh(err, isDeadly)
 	})
 	
-	return mwac, nil
+	return mwac
 }
 
 // func GetUserFromContext(c *gin.Context) (*User, bool) {

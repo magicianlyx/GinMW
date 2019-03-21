@@ -8,6 +8,30 @@ import (
 	"time"
 )
 
+// type IHttpContextRead interface {
+// 	Get(key string) (value interface{}, exists bool)
+// 	GetString(key string) (s string)
+// 	GetBool(key string) (b bool)
+// 	GetInt(key string) (i int)
+// 	GetInt64(key string) (i64 int64)
+// 	GetFloat64(key string) (f64 float64)
+// 	GetTime(key string) (t time.Time)
+// 	GetDuration(key string) (d time.Duration)
+// 	GetStringSlice(key string) (ss []string)
+// 	GetStringMap(key string) (sm map[string]interface{})
+// 	GetStringMapString(key string) (sms map[string]string)
+// 	GetStringMapStringSlice(key string) (smss map[string][]string)
+// }
+//
+// type IHttpContextWrite interface {
+// 	Set(key string, value interface{})
+// }
+//
+// type IHttpContext interface {
+// 	IHttpContextRead
+// 	IHttpContextWrite
+// }
+
 type HttpContext struct {
 	context    map[string]interface{} // 创建一个gin以外的context 不污染gin context中的字典
 	GinContext *gin.Context
@@ -151,10 +175,11 @@ func GetRequestInfo(hc *HttpContext) (*HttpRequest, error) {
 }
 
 type HttpResponse struct {
-	Proto  string
-	Header http.Header
-	Body   []byte
-	Status int
+	proto  string
+	header http.Header
+	body   []byte
+	status int
+	c      *gin.Context
 }
 
 func GetResponseInfo(hc *HttpContext) (*HttpResponse, error) {
@@ -165,30 +190,43 @@ func GetResponseInfo(hc *HttpContext) (*HttpResponse, error) {
 	body := rw.GetBody()
 	status := rw.Status()
 	return &HttpResponse{
-		Proto:  proto,
-		Header: header,
-		Body:   body,
-		Status: status,
+		proto,
+		header,
+		body,
+		status,
+		c,
 	}, nil
+}
+
+func (hr *HttpResponse) AddHeader(k string, v string) {
+	hr.c.Writer.Header().Set(k, v)
+}
+
+func (hr *HttpResponse) Write(body []byte) (int, error) {
+	return hr.c.Writer.Write(hr.body)
+}
+
+func (hr *HttpResponse) Status(code int) {
+	hr.c.Status(code)
 }
 
 func (hr *HttpResponse) Restore(hc *HttpContext) error {
 	c := hc.GinContext
 	
 	// body
-	_, err := c.Writer.Write(hr.Body)
+	_, err := c.Writer.Write(hr.body)
 	if err != nil {
 		return ErrGinWriterInvalid
 	}
 	
 	// header
-	for k, vals := range hr.Header {
+	for k, vals := range hr.header {
 		for _, v := range vals {
 			c.Writer.Header().Set(k, v)
 		}
 	}
 	
 	// status
-	c.Status(hr.Status)
+	c.Status(hr.status)
 	return nil
 }

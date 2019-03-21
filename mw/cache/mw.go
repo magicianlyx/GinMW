@@ -2,22 +2,19 @@ package cache
 
 import (
 	"github.com/gin-gonic/gin"
-	"ginHook/hook"
-	"errors"
-)
-
-var (
-	ErrGetGinRequestUID = errors.New("can not get parameter `request_uid` from gin's context structure")
+	"git.corp.chaolian360.com/lrf123456/GinMW/hook"
 )
 
 type MWCache struct {
-	ginHook    *hook.GinHook
-	cache      ICache
-	serializer ISerializer
+	ginHook *hook.GinHook
 }
 
-func NewMWCache(cache ICache, coder ISerializer) (*MWCache, error) {
-	mwc := &MWCache{hook.NewGinHook(), cache, coder}
+func NewMWCache(cache ICache, serializer ISerializer) (*MWCache, error) {
+	if cache == nil || serializer == nil {
+		return nil, ErrParameter
+	}
+	
+	mwc := &MWCache{hook.NewGinHook()}
 	
 	mwc.ginHook.AddBeforeHandle(func(c *hook.HttpContext) (error, error) {
 		req, err := hook.GetRequestInfo(c)
@@ -25,25 +22,25 @@ func NewMWCache(cache ICache, coder ISerializer) (*MWCache, error) {
 			return err, nil
 		}
 		
-		if requestUID, err := mwc.serializer.RequestUUID(req); err != nil {
+		if requestUID, err := serializer.RequestUUID(req); err != nil {
 			return err, nil
 		} else {
 			
 			// 没有获取到缓存
-			if data, err := mwc.cache.Get(requestUID); err != nil {
+			if data, err := cache.Get(requestUID); err != nil {
 				c.Set("requestUID", requestUID)
 				return err, nil
 			} else {
-				if hri, err := mwc.serializer.DeserializeResponse(data); err != nil {
+				if hri, err := serializer.DeserializeResponse(data); err != nil {
 					// 解码http响应失败 从缓存中删除
-					mwc.cache.Del(requestUID)
+					cache.Del(requestUID)
 					c.Set("requestUID", requestUID)
 					return err, nil
 				} else {
 					// 解码成功 还原到context上
 					if err = hri.Restore(c); err != nil {
 						// 还原失败 从缓存中删除
-						mwc.cache.Del(requestUID)
+						cache.Del(requestUID)
 						c.Set("requestUID", requestUID)
 						return err, nil
 					} else {
@@ -71,13 +68,13 @@ func NewMWCache(cache ICache, coder ISerializer) (*MWCache, error) {
 			// 获取response报文失败
 			return err, nil
 		}
-		data, err := mwc.serializer.SerializeResponse(hri)
+		data, err := serializer.SerializeResponse(hri)
 		if err != nil {
 			// 序列化失败
 			return err, nil
 		}
 		
-		err = mwc.cache.Set(requestUID, data)
+		err = cache.Set(requestUID, data)
 		if err != nil {
 			// 设置缓存失败
 			return err, nil
