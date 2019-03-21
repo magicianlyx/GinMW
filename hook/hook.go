@@ -11,8 +11,8 @@ type IMW interface {
 type GinHook struct {
 	bhm *BeforeHandleMap
 	ahm *AfterHandleMap
-	fhm *FailHandlerMap // 致命错误
-	ehm *FailHandlerMap // 所有错误
+	fhm *FailHandlerMap  // 致命错误
+	ehm *ErrorHandlerMap // 所有错误
 }
 
 func NewGinHook() *GinHook {
@@ -20,7 +20,7 @@ func NewGinHook() *GinHook {
 		NewBeforeHandleMap(),
 		NewAfterHandleMap(),
 		NewFailHandlerMap(),
-		NewFailHandlerMap(),
+		NewErrorHandlerMap(),
 	}
 }
 
@@ -31,10 +31,10 @@ func (gh *GinHook) DelFailHandlerFunc(fh FailHandler) {
 	gh.fhm.Del(fh)
 }
 
-func (gh *GinHook) AddErrorHandlerFunc(fh FailHandler) {
+func (gh *GinHook) AddErrorHandlerFunc(fh ErrorHandler) {
 	gh.ehm.Add(fh)
 }
-func (gh *GinHook) DelErrorHandlerFunc(fh FailHandler) {
+func (gh *GinHook) DelErrorHandlerFunc(fh ErrorHandler) {
 	gh.ehm.Del(fh)
 }
 
@@ -63,13 +63,13 @@ func (gh *GinHook) HandlerFunc() gin.HandlerFunc {
 			e1, e2 := bh(hc)
 			if e1 != nil {
 				// 非致命错误
-				gh.ehm.InvokeAll(hc, e1)
+				gh.ehm.InvokeAll(hc, e1, false)
 				return true
 			}
 			if e2 != nil {
 				// 致命错误
 				gh.fhm.InvokeAll(hc, e2)
-				gh.ehm.InvokeAll(hc, e2)
+				gh.ehm.InvokeAll(hc, e2, true)
 				return false
 			}
 			return true
@@ -82,12 +82,12 @@ func (gh *GinHook) HandlerFunc() gin.HandlerFunc {
 			e1, e2 := ah(hc)
 			if e1 != nil {
 				// 非致命错误
-				gh.ehm.InvokeAll(hc, e1)
+				gh.ehm.InvokeAll(hc, e1, false)
 			}
 			if e2 != nil {
 				// 致命错误
 				gh.fhm.InvokeAll(hc, e2)
-				gh.ehm.InvokeAll(hc, e2)
+				gh.ehm.InvokeAll(hc, e2, true)
 				return false
 			}
 			return true

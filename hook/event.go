@@ -6,6 +6,7 @@ import (
 )
 
 type FailHandler func(c *HttpContext, err error)
+type ErrorHandler func(c *HttpContext, err error, isDeadly bool)
 type BeforeHandle func(c *HttpContext) (error, error)
 type AfterHandle func(c *HttpContext) (error, error)
 
@@ -31,6 +32,32 @@ func (fhm *FailHandlerMap) InvokeAll(c *HttpContext, err error) {
 	fhm.m.Range(func(_, value interface{}) bool {
 		fh := value.(FailHandler)
 		fh(c, err)
+		return true
+	})
+}
+
+type ErrorHandlerMap struct {
+	m sync.Map
+}
+
+func NewErrorHandlerMap() *ErrorHandlerMap {
+	return &ErrorHandlerMap{sync.Map{}}
+}
+
+func (fhm *ErrorHandlerMap) Add(fh ErrorHandler) {
+	p := reflect.ValueOf(fh).Pointer()
+	fhm.m.Store(p, fh)
+}
+
+func (fhm *ErrorHandlerMap) Del(fh ErrorHandler) {
+	p := reflect.ValueOf(fh).Pointer()
+	fhm.m.Delete(p)
+}
+
+func (fhm *ErrorHandlerMap) InvokeAll(c *HttpContext, err error, isDeadly bool) {
+	fhm.m.Range(func(_, value interface{}) bool {
+		fh := value.(ErrorHandler)
+		fh(c, err, isDeadly)
 		return true
 	})
 }

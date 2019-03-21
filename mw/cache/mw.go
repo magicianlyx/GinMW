@@ -16,7 +16,7 @@ type MWCache struct {
 	serializer ISerializer
 }
 
-func NewMWCache(cache ICache, coder ISerializer) *MWCache {
+func NewMWCache(cache ICache, coder ISerializer) (*MWCache, error) {
 	mwc := &MWCache{hook.NewGinHook(), cache, coder}
 	
 	mwc.ginHook.AddBeforeHandle(func(c *hook.HttpContext) (error, error) {
@@ -85,7 +85,7 @@ func NewMWCache(cache ICache, coder ISerializer) *MWCache {
 		return nil, nil
 		
 	})
-	return mwc
+	return mwc, nil
 }
 
 func (hc *MWCache) HandlerFunc() gin.HandlerFunc {

@@ -3,7 +3,6 @@ package cache
 import (
 	"github.com/json-iterator/go"
 	"ginHook/hook"
-	"errors"
 )
 
 type IRequestSerializer interface {
@@ -24,11 +23,12 @@ type Serializer struct {
 }
 
 
-// http唯一性
+// http request 唯一性
 func (*Serializer) RequestUUID(hri *hook.HttpRequest) (s string, err error) {
 	return hri.Path, nil
 }
 
+// 序列化response结构体 可以根据需要只存储一部分参数
 func (*Serializer) SerializeResponse(v *hook.HttpResponse) ([]byte, error) {
 	bs, err := jsoniter.Marshal(v)
 	if err != nil {
@@ -38,6 +38,7 @@ func (*Serializer) SerializeResponse(v *hook.HttpResponse) ([]byte, error) {
 	}
 }
 
+// 反序列化response结构体 注意要跟序列化函数配合
 func (*Serializer) DeserializeResponse(data []byte) (hri *hook.HttpResponse, err error) {
 	hri = &hook.HttpResponse{}
 	err = jsoniter.Unmarshal(data, hri)

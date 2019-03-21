@@ -6,31 +6,52 @@ import (
 	"ginHook/hook"
 )
 
-type ErrorLogHandler func(msg string)
+type ErrorLogHandler func(err error, isDeadly bool)
 type HijackHandler func(c *gin.Context)
+type Validator func(c *gin.Context, u *User) error
 
 type MWAccessControl struct {
 	ginHook *hook.GinHook
 	rds     *redisClient
-	elh     ErrorLogHandler // 错误日志打印方法
-	hjh     HijackHandler   // 拦截的非法访问http请求处理
+	// validator Validator   // 提供给外部的验证器 通过该接口能够获取http请求的用户身份信息
+	// elh     ErrorLogHandler // 错误日志打印方法
+	// hjh     HijackHandler   // 拦截的非法访问http请求处理
 }
 
-func NewMWAccessControl(client *redis.Client, elh ErrorLogHandler, hjh HijackHandler) *MWAccessControl {
+func NewMWAccessControl(client *redis.Client, validator Validator, elh ErrorLogHandler, hjh HijackHandler) (*MWAccessControl, error) {
 	rds := InitRedis(client)
 	
-	mwac := &MWAccessControl{hook.NewGinHook(), rds, elh, hjh}
+	mwac := &MWAccessControl{hook.NewGinHook(), rds}
 	
 	mwac.ginHook.AddBeforeHandle(func(c *hook.HttpContext) (error, error) {
 		sessid, err := c.GinContext.Cookie("PHPSESSID")
 		if err != nil {
-			return nil, ErrSessionId
+			return nil, ErrNoSessionId
 		}
 		
 		// 从redis中获取请求的身份信息
 		u, err := rds.GetUserInfo(sessid)
 		if err != nil {
 			return nil, ErrRedisData
+		}
+		
+		err = validator(c.GinContext, u)
+		if err != nil {
+			return nil, err
+		}
+		c.Set("user", u)
+		return nil, nil
+	})
+	
+	mwac.ginHook.AddBeforeHandle(func(c *hook.HttpContext) (error, error) {
+		
+		v, ok := c.Get("user")
+		if !ok {
+			return nil, ErrNoUser
+		}
+		u, ok := v.(*User)
+		if !ok {
+			return nil, ErrNoUser
 		}
 		
 		// 超管身份 完全开放访问
@@ -54,15 +75,25 @@ func NewMWAccessControl(client *redis.Client, elh ErrorLogHandler, hjh HijackHan
 	
 	// 处理被拦截的http请求
 	mwac.ginHook.AddFailHandlerFunc(func(c *hook.HttpContext, err error) {
-		mwac.hjh(c.GinContext)
+		hjh(c.GinContext)
 	})
 	
-	mwac.ginHook.AddErrorHandlerFunc(func(c *hook.HttpContext, err error) {
-		mwac.elh(err.Error())
+	// 处理错误节点
+	mwac.ginHook.AddErrorHandlerFunc(func(c *hook.HttpContext, err error, isDeadly bool) {
+		elh(err, isDeadly)
 	})
 	
-	return mwac
+	return mwac, nil
 }
+
+// func GetUserFromContext(c *gin.Context) (*User, bool) {
+// 	if v, ok := c.Get("user"); ok {
+// 		if u, ok1 := v.(*User); ok1 {
+// 			return u, true
+// 		}
+// 	}
+// 	return nil, false
+// }
 
 func (mwac *MWAccessControl) HandlerFunc() gin.HandlerFunc {
 	return mwac.ginHook.HandlerFunc()
