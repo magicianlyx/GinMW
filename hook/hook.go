@@ -79,7 +79,7 @@ func (gh *GinHook) HandlerFunc() gin.HandlerFunc {
 			// 致命错误
 			gh.eh(hc, e2, true)
 			
-			if !gh.fh(hc, e2) != nil {
+			if gh.fh(hc, e2) != nil {
 				c.Abort()
 			} else {
 				// 致命错误恢复
