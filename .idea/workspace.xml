@@ -1,15 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="5047b13a-734d-4e43-814b-59a746246267" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/hook/context.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/hook/event.go" beforeDir="false" afterPath="$PROJECT_DIR$/hook/event.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/hook/hook.go" beforeDir="false" afterPath="$PROJECT_DIR$/hook/hook.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/hook/http.go" beforeDir="false" afterPath="$PROJECT_DIR$/hook/http.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mw/auth/mw.go" beforeDir="false" afterPath="$PROJECT_DIR$/mw/auth/mw.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mw/cache/mw.go" beforeDir="false" afterPath="$PROJECT_DIR$/mw/cache/mw.go" afterDir="false" />
-    </list>
+    <list default="true" id="5047b13a-734d-4e43-814b-59a746246267" name="Default" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -31,11 +23,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="serial.go" pinned="false" current-in-tab="true">
+      <file leaf-file-name="serial.go" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/mw/cache/serial.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="323">
-              <caret line="17" column="22" lean-forward="true" selection-start-line="17" selection-start-column="22" selection-end-line="17" selection-end-column="22" />
+            <state relative-caret-position="114">
+              <caret line="6" lean-forward="true" selection-start-line="6" selection-end-line="6" />
               <folding>
                 <element signature="e#15#105#0" expanded="true" />
               </folding>
@@ -84,11 +76,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="cache.go" pinned="false" current-in-tab="false">
+      <file leaf-file-name="cache.go" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/mw/cache/cache.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="19">
-              <caret line="22" column="96" lean-forward="true" selection-start-line="22" selection-start-column="96" selection-end-line="22" selection-end-column="96" />
+            <state relative-caret-position="285">
+              <caret line="36" column="1" lean-forward="true" selection-start-line="36" selection-start-column="1" selection-end-line="36" selection-end-column="1" />
             </state>
           </provider>
         </entry>
@@ -128,6 +120,7 @@
       <find>(c *Context)</find>
       <find>newHttpContext</find>
       <find>Handler</find>
+      <find>Serializer</find>
     </findStrings>
     <replaceStrings>
       <replace>&quot;git.corp.chaolian360.com/lrf123456/GinMW/hook&quot;</replace>
@@ -425,13 +418,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/mw/cache/cache.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="19">
-          <caret line="22" column="96" lean-forward="true" selection-start-line="22" selection-start-column="96" selection-end-line="22" selection-end-column="96" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/mw/cache/error.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="133">
@@ -451,11 +437,18 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/mw/cache/serial.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="17" column="22" lean-forward="true" selection-start-line="17" selection-start-column="22" selection-end-line="17" selection-end-column="22" />
+        <state relative-caret-position="114">
+          <caret line="6" lean-forward="true" selection-start-line="6" selection-end-line="6" />
           <folding>
             <element signature="e#15#105#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mw/cache/cache.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="285">
+          <caret line="36" column="1" lean-forward="true" selection-start-line="36" selection-start-column="1" selection-end-line="36" selection-end-column="1" />
         </state>
       </provider>
     </entry>
