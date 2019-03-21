@@ -9,15 +9,13 @@ type MWCache struct {
 	ginHook *hook.GinHook
 }
 
-func NewMWCache(cache ICache, serializer ISerializer) (*MWCache, error) {
+func NewMWCache(cache ICache, serializer ISerializer, eh hook.ErrorHandler) (*MWCache, error) {
 	if cache == nil || serializer == nil {
 		return nil, ErrParameter
 	}
 	
-	mwc := &MWCache{hook.NewGinHook()}
-	
-	mwc.ginHook.AddBeforeHandle(func(c *hook.HttpContext) (error, error) {
-		req, err := hook.GetRequestInfo(c)
+	bh := func(c hook.IHttpContext) (error, error) {
+		req, err := c.GetRequestInfo()
 		if err != nil {
 			return err, nil
 		}
@@ -28,42 +26,42 @@ func NewMWCache(cache ICache, serializer ISerializer) (*MWCache, error) {
 			
 			// 没有获取到缓存
 			if data, err := cache.Get(requestUID); err != nil {
-				c.Set("requestUID", requestUID)
+				c.SetHook("requestUID", requestUID)
 				return err, nil
 			} else {
 				if hri, err := serializer.DeserializeResponse(data); err != nil {
 					// 解码http响应失败 从缓存中删除
 					cache.Del(requestUID)
-					c.Set("requestUID", requestUID)
+					c.SetHook("requestUID", requestUID)
 					return err, nil
 				} else {
 					// 解码成功 还原到context上
-					if err = hri.Restore(c); err != nil {
+					if err = c.Restore(hri); err != nil {
 						// 还原失败 从缓存中删除
 						cache.Del(requestUID)
-						c.Set("requestUID", requestUID)
+						c.SetHook("requestUID", requestUID)
 						return err, nil
 					} else {
 						// 还原成功
-						c.GinContext.Abort()
+						c.GetGinContext().Abort()
 						return nil, nil
 					}
 				}
 			}
 			
 		}
-	})
+	}
 	
-	mwc.ginHook.AddAfterHandle(func(c *hook.HttpContext) (error, error) {
+	ah := func(c hook.IHttpContext) (error, error) {
 		requestUID := ""
-		if v, ok := c.Get("requestUID"); ok {
+		if v, ok := c.GetHook("requestUID"); ok {
 			requestUID = v.(string)
 		} else {
 			// 获取缓存必要参数失败
 			return ErrGetGinRequestUID, nil
 		}
 		
-		hri, err := hook.GetResponseInfo(c)
+		hri, err := c.GetResponseInfo()
 		if err != nil {
 			// 获取response报文失败
 			return err, nil
@@ -80,8 +78,15 @@ func NewMWCache(cache ICache, serializer ISerializer) (*MWCache, error) {
 			return err, nil
 		}
 		return nil, nil
-		
-	})
+	}
+	
+	// 任何致命错误皆恢复
+	fh := func(c hook.IHttpContext, err error) error {
+		return nil
+	}
+	
+	mwc := &MWCache{hook.NewGinHook(bh, ah, fh, eh)}
+	
 	return mwc, nil
 }
 

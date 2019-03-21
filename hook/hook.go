@@ -9,91 +9,83 @@ type IMW interface {
 }
 
 type GinHook struct {
-	bhm *BeforeHandleMap
-	ahm *AfterHandleMap
-	fhm *FailHandlerMap  // 致命错误 一般会处理http的响应结果
-	ehm *ErrorHandlerMap // 所有错误 一般实现逻辑是打印日志
+	bh BeforeHandle
+	ah AfterHandle
+	fh FailHandler  // 致命错误 一般会处理http的响应结果
+	eh ErrorHandler // 所有错误 一般实现逻辑是打印日志
 }
 
-func NewGinHook() *GinHook {
-	return &GinHook{
-		NewBeforeHandleMap(),
-		NewAfterHandleMap(),
-		NewFailHandlerMap(),
-		NewErrorHandlerMap(),
+func NewGinHook(bh BeforeHandle, ah AfterHandle, fh FailHandler, eh ErrorHandler) *GinHook {
+	
+	if bh == nil {
+		bh = func(c IHttpContext) (error, error) {
+			return nil, nil
+		}
 	}
-}
-
-func (gh *GinHook) AddFailHandlerFunc(fh FailHandler) {
-	gh.fhm.Add(fh)
-}
-func (gh *GinHook) DelFailHandlerFunc(fh FailHandler) {
-	gh.fhm.Del(fh)
-}
-
-func (gh *GinHook) AddErrorHandlerFunc(fh ErrorHandler) {
-	gh.ehm.Add(fh)
-}
-func (gh *GinHook) DelErrorHandlerFunc(fh ErrorHandler) {
-	gh.ehm.Del(fh)
-}
-
-func (gh *GinHook) AddBeforeHandle(bh BeforeHandle) {
-	gh.bhm.Add(bh)
-}
-
-func (gh *GinHook) DelBeforeHandle(bh BeforeHandle) {
-	gh.bhm.Del(bh)
-}
-
-func (gh *GinHook) AddAfterHandle(ah AfterHandle) {
-	gh.ahm.Add(ah)
-}
-
-func (gh *GinHook) DelAfterHandle(ah AfterHandle) {
-	gh.ahm.Del(ah)
+	if ah == nil {
+		ah = func(c IHttpContext) (error, error) {
+			return nil, nil
+		}
+	}
+	
+	if fh == nil {
+		fh = func(c IHttpContext, err error) error {
+			return err
+		}
+	}
+	
+	if eh == nil {
+		eh = func(c IHookContextRead, err error, isDeadly bool) {
+		}
+	}
+	
+	return &GinHook{
+		bh,
+		ah,
+		fh,
+		eh,
+	}
 }
 
 func (gh *GinHook) HandlerFunc() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		hc := NewHttpContext(c)
+		hc := newHttpContext(c)
 		
-		gh.bhm.m.Range(func(_, value interface{}) bool {
-			bh := value.(BeforeHandle)
-			e1, e2 := bh(hc)
-			if e1 != nil {
-				// 非致命错误
-				gh.ehm.InvokeAll(hc, e1, false)
-				return true
-			}
-			if e2 != nil {
-				// 致命错误
-				gh.fhm.InvokeAll(hc, e2)
-				gh.ehm.InvokeAll(hc, e2, true)
+		e1, e2 := gh.bh(hc)
+		if e1 != nil {
+			// 非致命错误
+			gh.eh(hc, e1, false)
+		}
+		if e2 != nil {
+			// 致命错误
+			gh.eh(hc, e2, true)
+			
+			if !gh.fh(hc, e2) {
 				c.Abort()
-				return false
+			} else {
+				// 致命错误恢复
+				// 执行下一个gin节点
 			}
-			return true
-		})
+		}
 		
 		c.Next()
 		
-		gh.ahm.m.Range(func(_, value interface{}) bool {
-			ah := value.(AfterHandle)
-			e1, e2 := ah(hc)
-			if e1 != nil {
-				// 非致命错误
-				gh.ehm.InvokeAll(hc, e1, false)
-			}
-			if e2 != nil {
-				// 致命错误
-				gh.fhm.InvokeAll(hc, e2)
-				gh.ehm.InvokeAll(hc, e2, true)
+		e1, e2 = gh.ah(hc)
+		if e1 != nil {
+			// 非致命错误
+			gh.eh(hc, e1, false)
+		}
+		if e2 != nil {
+			// 致命错误
+			gh.eh(hc, e2, true)
+			
+			if !gh.fh(hc, e2) {
 				c.Abort()
-				return false
+			} else {
+				// 致命错误恢复
+				// 执行下一个gin节点
 			}
-			return true
-		})
+		}
 		
 	}
 }

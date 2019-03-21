@@ -16,15 +16,14 @@ type MWAccessControl struct {
 	// validator Validator   // 提供给外部的验证器 通过该接口能够获取http请求的用户身份信息
 	// elh     ErrorLogHandler // 错误日志打印方法
 	// hjh     HijackHandler   // 拦截的非法访问http请求处理
+	// unauthResponse interface{} // 没有权限访问时会返回这个结构体的json到客户端
 }
 
-func NewMWAccessControl(client *redis.Client, validator Validator, elh ErrorLogHandler, hjh HijackHandler) (*MWAccessControl) {
+func NewMWAccessControl(client *redis.Client, validator Validator, elh ErrorLogHandler, unauthResponse interface{}) (*MWAccessControl) {
 	rds := InitRedis(client)
 	
-	mwac := &MWAccessControl{hook.NewGinHook(), rds}
-	
-	mwac.ginHook.AddBeforeHandle(func(c *hook.HttpContext) (error, error) {
-		sessid, err := c.GinContext.Cookie("PHPSESSID")
+	bh := func(c hook.IHttpContext) (error, error) {
+		sessid, err := c.GetGinContext().Cookie("PHPSESSID")
 		if err != nil {
 			return nil, ErrNoSessionId
 		}
@@ -35,23 +34,10 @@ func NewMWAccessControl(client *redis.Client, validator Validator, elh ErrorLogH
 			return nil, ErrRedisData
 		}
 		
-		err = validator(c.GinContext, u)
+		// 外部接口处理
+		err = validator(c.GetGinContext(), u)
 		if err != nil {
 			return nil, err
-		}
-		c.Set("user", u)
-		return nil, nil
-	})
-	
-	mwac.ginHook.AddBeforeHandle(func(c *hook.HttpContext) (error, error) {
-		
-		v, ok := c.Get("user")
-		if !ok {
-			return nil, ErrNoUser
-		}
-		u, ok := v.(*User)
-		if !ok {
-			return nil, ErrNoUser
 		}
 		
 		// 超管身份 完全开放访问
@@ -65,35 +51,31 @@ func NewMWAccessControl(client *redis.Client, validator Validator, elh ErrorLogH
 		}
 		
 		// 普通商家具有访问该页面的权限
-		if ok := authCheck(c.GinContext.Request.URL.Path, u.AllPermission); ok {
+		if ok := authCheck(c.GetGinContext().Request.URL.Path, u.AllPermission); ok {
 			return nil, nil
 		}
 		
 		// 无权限访问
 		return nil, ErrNoAuth
-	})
+		
+	}
 	
 	// 处理被拦截的http请求
-	mwac.ginHook.AddFailHandlerFunc(func(c *hook.HttpContext, err error) {
-		hjh(c.GinContext)
-	})
+	fh := func(c hook.IHttpContext, err error) error {
+		// hjh(c.GetGinContext())
+		c.GetGinContext().JSON(200, unauthResponse)
+		return err
+	}
 	
 	// 处理错误节点
-	mwac.ginHook.AddErrorHandlerFunc(func(c *hook.HttpContext, err error, isDeadly bool) {
+	eh := func(c hook.IHookContextRead, err error, isDeadly bool) {
 		elh(err, isDeadly)
-	})
+	}
+	
+	mwac := &MWAccessControl{hook.NewGinHook(bh, nil, fh, eh), rds}
 	
 	return mwac
 }
-
-// func GetUserFromContext(c *gin.Context) (*User, bool) {
-// 	if v, ok := c.Get("user"); ok {
-// 		if u, ok1 := v.(*User); ok1 {
-// 			return u, true
-// 		}
-// 	}
-// 	return nil, false
-// }
 
 func (mwac *MWAccessControl) HandlerFunc() gin.HandlerFunc {
 	return mwac.ginHook.HandlerFunc()
