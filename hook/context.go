@@ -171,20 +171,20 @@ func (hc *HttpContext) Restore(hr *HttpResponse) error {
 	c := hc.GetGinContext()
 	
 	// body
-	_, err := c.Writer.Write(hr.body)
+	_, err := c.Writer.Write(hr.Body)
 	if err != nil {
 		return ErrGinWriterInvalid
 	}
 	
 	// header
-	for k, vals := range hr.header {
+	for k, vals := range hr.Header {
 		for _, v := range vals {
 			c.Writer.Header().Set(k, v)
 		}
 	}
 	
 	// status
-	c.Status(hr.status)
+	c.Status(hr.StatusCode)
 	return nil
 }
 

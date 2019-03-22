@@ -15,11 +15,11 @@ type HttpRequest struct {
 }
 
 type HttpResponse struct {
-	proto  string
-	header http.Header
-	body   []byte
-	status int
-	c      *gin.Context
+	Proto      string
+	Header     http.Header
+	Body       []byte
+	StatusCode int
+	c          *gin.Context
 }
 
 func (hr *HttpResponse) AddHeader(k string, v string) {
@@ -27,7 +27,7 @@ func (hr *HttpResponse) AddHeader(k string, v string) {
 }
 
 func (hr *HttpResponse) Write(body []byte) (int, error) {
-	return hr.c.Writer.Write(hr.body)
+	return hr.c.Writer.Write(hr.Body)
 }
 
 func (hr *HttpResponse) Status(code int) {

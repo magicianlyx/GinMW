@@ -14,7 +14,7 @@ import (
 func TestA(t *testing.T) {
 	r := gin.Default()
 	
-	c, err := cache.InitRedisCache(3, "127.0.0.1", 6379, 0, "", 10)
+	c, err := cache.InitRedisCache(10, "127.0.0.1", 6379, 0, "", 10)
 	if err != nil {
 		panic(err)
 	}
@@ -53,13 +53,13 @@ func TestA(t *testing.T) {
 	)
 	
 	r.GET("/wxsdk",
-		// hcmw.HandlerFunc(),
+		hcmw.HandlerFunc(),
 		acc.HandlerFunc(),
 		wxsdk,
 	)
 	
 	r.Run(":8081")
-	_ = hcmw
+	// _ = hcmw
 }
 
 func wxsdk(c *gin.Context) {

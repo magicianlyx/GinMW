@@ -5,13 +5,11 @@ import (
 	"git.corp.chaolian360.com/lrf123456/GinMW/hook"
 )
 
-// 外伸接口的userinfo参数是副本 跟中间件内部的不是同一个对象 在外面接口修改userinfo内的数据不会影响中间件内部的处理
 
 type Validator func(c *hook.HttpRequest, u *UserInfo) error  // 返回err!=nil时会无权访问
-type UnAuthResponse func(u *UserInfo, err error) interface{} // 无权限访问时返回给客户端的json response
-
-type AccessLog func(u *UserInfo)              // 接入回调 用于日志打印
-type UnAccessLog func(u *UserInfo, err error) // 无权限接入回调 用于日志打印
+type UnAuthResponse func(u *UserInfo, err error) interface{} // 决定无权限访问时返回给客户端的json response
+type AccessLog func(u *UserInfo)                             // 接入回调 用于日志打印
+type UnAccessLog func(u *UserInfo, err error)                // 无权限接入回调 用于日志打印
 
 type MWAccessControl struct {
 	ginHook *hook.GinHook
@@ -61,7 +59,6 @@ func NewMWAccessControl(client IUserInfoRead, validator Validator, al AccessLog,
 		u, err := client.GetUserInfo(sessid)
 		if err != nil || u == nil {
 			// 无权限访问
-			ual(ui, err)
 			return nil, ErrRedisData
 		} else {
 			ui.User = u.Clone()
@@ -71,7 +68,6 @@ func NewMWAccessControl(client IUserInfoRead, validator Validator, al AccessLog,
 		hri, err := c.GetRequestInfo()
 		if err != nil {
 			// 无权限访问
-			ual(ui, err)
 			return nil, err
 		}
 		
@@ -79,7 +75,6 @@ func NewMWAccessControl(client IUserInfoRead, validator Validator, al AccessLog,
 		err = validator(hri, ui)
 		if err != nil {
 			// 无权限访问
-			ual(ui, err)
 			return nil, err
 		}
 		
@@ -101,7 +96,6 @@ func NewMWAccessControl(client IUserInfoRead, validator Validator, al AccessLog,
 			return nil, nil
 		} else {
 			// 无权限访问
-			ual(ui, ErrNoAuth)
 			return nil, ErrNoAuth
 		}
 		
