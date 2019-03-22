@@ -2,7 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5047b13a-734d-4e43-814b-59a746246267" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/hook/hook.go" beforeDir="false" afterPath="$PROJECT_DIR$/hook/hook.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/go_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mw/auth/mw.go" beforeDir="false" afterPath="$PROJECT_DIR$/mw/auth/mw.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mw/auth/redis.go" beforeDir="false" afterPath="$PROJECT_DIR$/mw/auth/redis.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mw/cache/mw_test.go" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -13,94 +17,65 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="mw.go" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/mw/cache/mw.go">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="128">
-              <caret line="63" column="21" selection-start-line="63" selection-start-column="21" selection-end-line="63" selection-end-column="21" />
-              <folding>
-                <element signature="e#15#102#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="serial.go" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/mw/cache/serial.go">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="114">
-              <caret line="6" lean-forward="true" selection-start-line="6" selection-end-line="6" />
-              <folding>
-                <element signature="e#15#105#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="mw.go" pinned="false" current-in-tab="false">
+      <file leaf-file-name="mw.go" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/mw/auth/mw.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="19">
-              <caret line="15" column="16" selection-start-line="15" selection-start-column="7" selection-end-line="15" selection-end-column="16" />
+            <state relative-caret-position="76">
+              <caret line="7" column="68" selection-start-line="7" selection-start-column="68" selection-end-line="7" selection-end-column="68" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="error.go" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/mw/auth/error.go">
+      <file leaf-file-name="context.go" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/hook/context.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="38">
-              <caret line="5" column="1" lean-forward="true" selection-start-line="5" selection-start-column="1" selection-end-line="5" selection-end-column="1" />
+            <state relative-caret-position="308">
+              <caret line="72" column="10" selection-start-line="72" selection-start-column="10" selection-end-line="72" selection-end-column="10" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="pathTag.go" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/mw/auth/pathTag.go">
+      <file leaf-file-name="hook.go" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/hook/hook.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret column="1" selection-start-column="1" selection-end-column="1" />
+            <state relative-caret-position="118">
+              <caret line="54" selection-start-line="54" selection-end-line="54" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="user.go" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/mw/auth/user.go">
-          <provider selected="true" editor-type-id="text-editor" />
+      <file leaf-file-name="context.go" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/../../../github.com/gin-gonic/gin/context.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="156">
+              <caret line="108" selection-start-line="108" selection-end-line="108" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="panic.go" pinned="false" current-in-tab="false">
+        <entry file="file://C:/runtime/Go/src/runtime/panic.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="87">
+              <caret line="81" selection-start-line="81" selection-end-line="81" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="go_test.go" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/go_test.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="185">
+              <caret line="36" column="12" lean-forward="true" selection-start-line="36" selection-start-column="12" selection-end-line="36" selection-end-column="12" />
+            </state>
+          </provider>
         </entry>
       </file>
       <file leaf-file-name="redis.go" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/mw/auth/redis.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="361">
-              <caret line="21" column="10" selection-start-line="21" selection-start-column="10" selection-end-line="21" selection-end-column="10" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="cache.go" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/mw/cache/cache.go">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="285">
-              <caret line="36" column="1" lean-forward="true" selection-start-line="36" selection-start-column="1" selection-end-line="36" selection-end-column="1" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="hook.go" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/hook/hook.go">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="261">
-              <caret line="81" column="15" selection-start-line="81" selection-start-column="15" selection-end-line="81" selection-end-column="15" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="error.go" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/mw/cache/error.go">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="133">
-              <caret line="10" column="16" selection-start-line="10" selection-start-column="4" selection-end-line="10" selection-end-column="16" />
+            <state relative-caret-position="266">
+              <caret line="16" column="21" lean-forward="true" selection-start-line="16" selection-start-column="21" selection-end-line="16" selection-end-column="21" />
             </state>
           </provider>
         </entry>
@@ -140,16 +115,18 @@
         <option value="$PROJECT_DIR$/mw/cache/mw_test.go" />
         <option value="$PROJECT_DIR$/mw/cache/cache.go" />
         <option value="$PROJECT_DIR$/mw/cache/error.go" />
-        <option value="$PROJECT_DIR$/mw/auth/redis.go" />
         <option value="$PROJECT_DIR$/hook/t_test.go" />
         <option value="$PROJECT_DIR$/hook/responseWriter.go" />
-        <option value="$PROJECT_DIR$/mw/auth/mw.go" />
         <option value="$PROJECT_DIR$/hook/event.go" />
         <option value="$USER_HOME$/Desktop/新建文本文档.go" />
         <option value="$PROJECT_DIR$/hook/http.go" />
         <option value="$PROJECT_DIR$/hook/context.go" />
         <option value="$PROJECT_DIR$/mw/cache/mw.go" />
         <option value="$PROJECT_DIR$/hook/hook.go" />
+        <option value="$PROJECT_DIR$/test.go" />
+        <option value="$PROJECT_DIR$/mw/auth/redis.go" />
+        <option value="$PROJECT_DIR$/go_test.go" />
+        <option value="$PROJECT_DIR$/mw/auth/mw.go" />
       </list>
     </option>
   </component>
@@ -184,11 +161,6 @@
             <path>
               <item name="GinMW" type="b2602c69:ProjectViewProjectNode" />
               <item name="GinMW" type="462c0819:PsiDirectoryNode" />
-              <item name="hook" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="GinMW" type="b2602c69:ProjectViewProjectNode" />
-              <item name="GinMW" type="462c0819:PsiDirectoryNode" />
               <item name="mw" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -196,12 +168,6 @@
               <item name="GinMW" type="462c0819:PsiDirectoryNode" />
               <item name="mw" type="462c0819:PsiDirectoryNode" />
               <item name="auth" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="GinMW" type="b2602c69:ProjectViewProjectNode" />
-              <item name="GinMW" type="462c0819:PsiDirectoryNode" />
-              <item name="mw" type="462c0819:PsiDirectoryNode" />
-              <item name="cache" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -237,7 +203,18 @@
       </list>
     </option>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Go Test.TestA in git.corp.chaolian360.com/lrf123456/GinMW">
+    <configuration name="TestA in git.corp.chaolian360.com/lrf123456/GinMW" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="GinMW" />
+      <working_directory value="$PROJECT_DIR$" />
+      <go_parameters value="-i" />
+      <framework value="gotest" />
+      <kind value="PACKAGE" />
+      <package value="git.corp.chaolian360.com/lrf123456/GinMW" />
+      <directory value="$PROJECT_DIR$/" />
+      <filePath value="$PROJECT_DIR$/" />
+      <pattern value="^TestA$" />
+    </configuration>
     <configuration name="TestA in git.corp.chaolian360.com/lrf123456/GinMW/hook" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="GinMW" />
       <working_directory value="$PROJECT_DIR$/hook" />
@@ -249,32 +226,64 @@
       <filePath value="$PROJECT_DIR$/" />
       <pattern value="^TestA$" />
     </configuration>
+    <list>
+      <item itemvalue="Go Test.TestA in git.corp.chaolian360.com/lrf123456/GinMW/hook" />
+      <item itemvalue="Go Test.TestA in git.corp.chaolian360.com/lrf123456/GinMW" />
+    </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Go Test.TestA in git.corp.chaolian360.com/lrf123456/GinMW" />
         <item itemvalue="Go Test.TestA in git.corp.chaolian360.com/lrf123456/GinMW/hook" />
       </list>
     </recent_temporary>
   </component>
   <component name="TestHistory">
-    <history-entry file="TestA_in_git_corp_chaolian360_com_lrf123456_GinMW_hook - 2019.03.21 at 17h 23m 12s.xml">
-      <configuration name="TestA in git.corp.chaolian360.com/lrf123456/GinMW/hook" configurationId="GoTestRunConfiguration" />
+    <history-entry file="TestA_in_git_corp_chaolian360_com_lrf123456_GinMW - 2019.03.22 at 11h 44m 40s.xml">
+      <configuration name="TestA in git.corp.chaolian360.com/lrf123456/GinMW" configurationId="GoTestRunConfiguration" />
+    </history-entry>
+    <history-entry file="TestA_in_git_corp_chaolian360_com_lrf123456_GinMW - 2019.03.22 at 11h 45m 53s.xml">
+      <configuration name="TestA in git.corp.chaolian360.com/lrf123456/GinMW" configurationId="GoTestRunConfiguration" />
+    </history-entry>
+    <history-entry file="TestA_in_git_corp_chaolian360_com_lrf123456_GinMW - 2019.03.22 at 11h 47m 33s.xml">
+      <configuration name="TestA in git.corp.chaolian360.com/lrf123456/GinMW" configurationId="GoTestRunConfiguration" />
+    </history-entry>
+    <history-entry file="TestA_in_git_corp_chaolian360_com_lrf123456_GinMW - 2019.03.22 at 11h 48m 49s.xml">
+      <configuration name="TestA in git.corp.chaolian360.com/lrf123456/GinMW" configurationId="GoTestRunConfiguration" />
+    </history-entry>
+    <history-entry file="TestA_in_git_corp_chaolian360_com_lrf123456_GinMW - 2019.03.22 at 11h 50m 35s.xml">
+      <configuration name="TestA in git.corp.chaolian360.com/lrf123456/GinMW" configurationId="GoTestRunConfiguration" />
+    </history-entry>
+    <history-entry file="TestA_in_git_corp_chaolian360_com_lrf123456_GinMW - 2019.03.22 at 11h 52m 08s.xml">
+      <configuration name="TestA in git.corp.chaolian360.com/lrf123456/GinMW" configurationId="GoTestRunConfiguration" />
+    </history-entry>
+    <history-entry file="TestA_in_git_corp_chaolian360_com_lrf123456_GinMW - 2019.03.22 at 11h 52m 38s.xml">
+      <configuration name="TestA in git.corp.chaolian360.com/lrf123456/GinMW" configurationId="GoTestRunConfiguration" />
+    </history-entry>
+    <history-entry file="TestA_in_git_corp_chaolian360_com_lrf123456_GinMW - 2019.03.22 at 11h 54m 19s.xml">
+      <configuration name="TestA in git.corp.chaolian360.com/lrf123456/GinMW" configurationId="GoTestRunConfiguration" />
+    </history-entry>
+    <history-entry file="TestA_in_git_corp_chaolian360_com_lrf123456_GinMW - 2019.03.22 at 11h 55m 35s.xml">
+      <configuration name="TestA in git.corp.chaolian360.com/lrf123456/GinMW" configurationId="GoTestRunConfiguration" />
+    </history-entry>
+    <history-entry file="TestA_in_git_corp_chaolian360_com_lrf123456_GinMW - 2019.03.22 at 11h 57m 06s.xml">
+      <configuration name="TestA in git.corp.chaolian360.com/lrf123456/GinMW" configurationId="GoTestRunConfiguration" />
     </history-entry>
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.12153518" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.12153518" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Event Log" side_tool="true" />
       <window_info anchor="right" id="Database" />
       <window_info anchor="bottom" id="Find" order="1" />
       <window_info anchor="bottom" id="Database Changes" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.3293348" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.3293348" />
       <window_info anchor="bottom" id="Version Control" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Terminal" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info active="true" anchor="bottom" id="Debug" order="3" visible="true" weight="0.43293348" />
       <window_info id="Favorites" side_tool="true" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -292,7 +301,15 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="2" />
+      <breakpoints>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/go_test.go</url>
+          <line>41</line>
+          <properties />
+          <option name="timeStamp" value="15" />
+        </line-breakpoint>
+      </breakpoints>
+      <option name="time" value="16" />
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
@@ -322,16 +339,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/mw/cache/mw_test.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="361">
-          <caret line="19" column="16" selection-start-line="19" selection-start-column="16" selection-end-line="19" selection-end-column="16" />
-          <folding>
-            <element signature="e#15#36#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/hook/responseWriter.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-233" />
@@ -344,89 +351,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../../../github.com/gin-gonic/gin/context.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="83">
-          <caret line="94" column="39" selection-start-line="94" selection-start-column="28" selection-end-line="94" selection-end-column="39" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/hook/error.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="76">
           <caret line="6" column="5" lean-forward="true" selection-start-line="6" selection-start-column="5" selection-end-line="6" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/hook/event.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="76">
-          <caret line="4" column="5" selection-start-line="4" selection-start-column="5" selection-end-line="4" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/hook/http.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="38">
-          <caret line="2" column="7" selection-start-line="2" selection-start-column="7" selection-end-line="2" selection-end-column="7" />
-          <folding>
-            <element signature="e#14#94#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/hook/context.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="169">
-          <caret line="45" column="5" selection-start-line="45" selection-start-column="5" selection-end-line="45" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mw/auth/mw.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="19">
-          <caret line="15" column="16" selection-start-line="15" selection-start-column="7" selection-end-line="15" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mw/auth/error.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="38">
-          <caret line="5" column="1" lean-forward="true" selection-start-line="5" selection-start-column="1" selection-end-line="5" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mw/auth/pathTag.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="1" selection-start-column="1" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mw/auth/user.go">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mw/auth/redis.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="361">
-          <caret line="21" column="10" selection-start-line="21" selection-start-column="10" selection-end-line="21" selection-end-column="10" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mw/cache/error.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="133">
-          <caret line="10" column="16" selection-start-line="10" selection-start-column="4" selection-end-line="10" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mw/cache/mw.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="128">
-          <caret line="63" column="21" selection-start-line="63" selection-start-column="21" selection-end-line="63" selection-end-column="21" />
-          <folding>
-            <element signature="e#15#102#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -440,17 +368,124 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/mw/auth/error.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="38">
+          <caret line="5" column="1" selection-start-line="5" selection-start-column="1" selection-end-line="5" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mw/cache/error.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="133">
+          <caret line="10" column="16" selection-start-line="10" selection-start-column="4" selection-end-line="10" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mw/cache/mw_test.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="361">
+          <caret line="19" column="16" selection-start-line="19" selection-start-column="16" selection-end-line="19" selection-end-column="16" />
+          <folding>
+            <element signature="e#15#36#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mw/auth/pathTag.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="51" column="5" selection-start-line="51" selection-start-column="5" selection-end-line="51" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../github.com/go-redis/redis/redis.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="214">
+          <caret line="363" column="5" selection-start-line="363" selection-start-column="5" selection-end-line="363" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/hook/http.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="38">
+          <caret line="2" column="7" selection-start-line="2" selection-start-column="7" selection-end-line="2" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/mw/cache/cache.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
+        <state relative-caret-position="19">
           <caret line="36" column="1" lean-forward="true" selection-start-line="36" selection-start-column="1" selection-end-line="36" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mw/cache/mw.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-228">
+          <caret line="6" lean-forward="true" selection-start-line="6" selection-end-line="6" />
+          <folding>
+            <element signature="e#15#102#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/hook/event.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="57">
+          <caret line="3" column="5" selection-start-line="3" selection-start-column="5" selection-end-line="3" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mw/auth/user.go">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mw/auth/redis.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="266">
+          <caret line="16" column="21" lean-forward="true" selection-start-line="16" selection-start-column="21" selection-end-line="16" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/go_test.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="185">
+          <caret line="36" column="12" lean-forward="true" selection-start-line="36" selection-start-column="12" selection-end-line="36" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/runtime/Go/src/runtime/panic.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="87">
+          <caret line="81" selection-start-line="81" selection-end-line="81" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../github.com/gin-gonic/gin/context.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="156">
+          <caret line="108" selection-start-line="108" selection-end-line="108" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/hook/hook.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="261">
-          <caret line="81" column="15" selection-start-line="81" selection-start-column="15" selection-end-line="81" selection-end-column="15" />
+        <state relative-caret-position="118">
+          <caret line="54" selection-start-line="54" selection-end-line="54" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/hook/context.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="308">
+          <caret line="72" column="10" selection-start-line="72" selection-start-column="10" selection-end-line="72" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mw/auth/mw.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="76">
+          <caret line="7" column="68" selection-start-line="7" selection-start-column="68" selection-end-line="7" selection-end-column="68" />
         </state>
       </provider>
     </entry>

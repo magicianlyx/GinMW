@@ -4,19 +4,38 @@ import (
 	"github.com/go-redis/redis"
 )
 
+type User struct {
+	SelfId        int
+	UserId        int
+	Role          string
+	AllPermission []string
+}
+
+// 生成副本
+func (u *User) Clone() User {
+	if u == nil{
+		return User{}
+	}
+	allPermission := make([]string, len(u.AllPermission))
+	copy(allPermission, u.AllPermission)
+	return User{
+		u.SelfId,
+		u.UserId,
+		u.Role,
+		allPermission,
+	}
+}
+
+type IUserInfoRead interface {
+	GetUserInfo(string) (*User, error)
+}
+
 type redisClient struct {
 	client *redis.Client
 }
 
 func InitRedis(cli *redis.Client) (*redisClient) {
 	return &redisClient{cli}
-}
-
-type User struct {
-	SelfId        int
-	UserId        int
-	Role          string
-	AllPermission []string
 }
 
 // 获取需要的部分user数据
