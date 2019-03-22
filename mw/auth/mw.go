@@ -3,43 +3,64 @@ package auth
 import (
 	"github.com/gin-gonic/gin"
 	"git.corp.chaolian360.com/lrf123456/GinMW/hook"
+	"github.com/go-redis/redis"
+	"fmt"
 )
-
-
-type Validator func(c *hook.HttpRequest, u *UserInfo) error  // 返回err!=nil时会无权访问
-type UnAuthResponse func(u *UserInfo, err error) interface{} // 决定无权限访问时返回给客户端的json response
-type AccessLog func(u *UserInfo)                             // 接入回调 用于日志打印
-type UnAccessLog func(u *UserInfo, err error)                // 无权限接入回调 用于日志打印
-
-type MWAccessControl struct {
-	ginHook *hook.GinHook
-	rds     IUserInfoRead
-}
 
 type UserInfo struct {
 	SessionId string
 	User
 }
 
-func NewMWAccessControl(client IUserInfoRead, validator Validator, al AccessLog, ual UnAccessLog, uar UnAuthResponse) (*MWAccessControl) {
-	if validator == nil {
-		validator = func(c *hook.HttpRequest, u *UserInfo) error {
-			return nil
-		}
+type IMWAccessControl interface {
+	IUserInfoRead
+	Validator(c hook.IHttpContext, u *UserInfo) error
+	AccessLog(u *UserInfo)
+	UnAccessLog(u *UserInfo, err error)
+	UnAuthResponse(u *UserInfo, err error) interface{}
+}
+
+type MWAccessControl struct {
+}
+
+func (mwac *MWAccessControl) GetUserInfo(sessid string) (*User, error) {
+	cli := redis.NewClient(&redis.Options{
+		Addr:     "192.168.2.241:6379",
+		Password: "",
+		DB:       2,
+		PoolSize: 10,
+	})
+	rds := InitRedis(cli)
+	return rds.GetUserInfo(sessid)
+}
+
+func (mwac *MWAccessControl) Validator(c hook.IHttpContext, u *UserInfo) error {
+	return nil
+}
+
+func (mwac *MWAccessControl) AccessLog(u *UserInfo) {
+	fmt.Printf("用户%d接入成功\r\n", u.SelfId)
+}
+
+func (mwac *MWAccessControl) UnAccessLog(u *UserInfo, err error) {
+	fmt.Printf("用户%s接入失败\r\n", u.SessionId)
+}
+
+func (mwac *MWAccessControl) UnAuthResponse(u *UserInfo, err error) interface{} {
+	return struct {
+		Code int    `json:"code"`
+		Msg  string `json:"msg"`
+	}{
+		400,
+		"can not access",
 	}
-	if al == nil {
-		al = func(u *UserInfo) {
-		}
-	}
-	if ual == nil {
-		ual = func(u *UserInfo, err error) {
-		}
-	}
-	if uar == nil {
-		uar = func(u *UserInfo, err error) interface{} {
-			return nil
-		}
-	}
+}
+
+type MWAccessControlCenter struct {
+	ginHook *hook.GinHook
+}
+
+func NewMWAccessControlCenter(mwac IMWAccessControl) (*MWAccessControlCenter) {
 	
 	bh := func(c hook.IHttpContext) (error, error) {
 		
@@ -56,7 +77,7 @@ func NewMWAccessControl(client IUserInfoRead, validator Validator, al AccessLog,
 		}
 		
 		// 从redis中获取请求的身份信息
-		u, err := client.GetUserInfo(sessid)
+		u, err := mwac.GetUserInfo(sessid)
 		if err != nil || u == nil {
 			// 无权限访问
 			return nil, ErrRedisData
@@ -64,15 +85,8 @@ func NewMWAccessControl(client IUserInfoRead, validator Validator, al AccessLog,
 			ui.User = u.Clone()
 		}
 		
-		// 从gin context中获取http request信息
-		hri, err := c.GetRequestInfo()
-		if err != nil {
-			// 无权限访问
-			return nil, err
-		}
-		
 		// 外部接口处理
-		err = validator(hri, ui)
+		err = mwac.Validator(c, ui)
 		if err != nil {
 			// 无权限访问
 			return nil, err
@@ -80,19 +94,19 @@ func NewMWAccessControl(client IUserInfoRead, validator Validator, al AccessLog,
 		
 		// 超管身份 完全开放访问
 		if u.Role == "admin" {
-			al(ui)
+			mwac.AccessLog(ui)
 			return nil, nil
 		}
 		
 		// 超管身份 完全开放访问
 		if u.UserId == 1 {
-			al(ui)
+			mwac.AccessLog(ui)
 			return nil, nil
 		}
 		
 		// 普通商家具有访问该页面的权限
 		if ok := authCheck(c.GetGinContext().Request.URL.Path, u.AllPermission); ok {
-			al(ui)
+			mwac.AccessLog(ui)
 			return nil, nil
 		} else {
 			// 无权限访问
@@ -104,19 +118,19 @@ func NewMWAccessControl(client IUserInfoRead, validator Validator, al AccessLog,
 	// 处理被拦截的http请求
 	fh := func(c hook.IHttpContext, err error) error {
 		u := getUserInfo(c)
-		unAuthResponse := uar(u, err)
+		unAuthResponse := mwac.UnAuthResponse(u, err)
 		c.GetGinContext().JSON(200, unAuthResponse)
-		ual(u, err)
+		mwac.UnAccessLog(u, err)
 		return err
 	}
 	
-	mwac := &MWAccessControl{hook.NewGinHook(bh, nil, fh, nil), client}
-	
-	return mwac
+	mwacc := &MWAccessControlCenter{}
+	mwacc.ginHook = hook.NewGinHook(bh, nil, fh, nil)
+	return mwacc
 }
 
-func (mwac *MWAccessControl) HandlerFunc() gin.HandlerFunc {
-	return mwac.ginHook.HandlerFunc()
+func (mwacc *MWAccessControlCenter) HandlerFunc() gin.HandlerFunc {
+	return mwacc.ginHook.HandlerFunc()
 }
 
 func getUserInfo(c hook.IHookContextRead) *UserInfo {
