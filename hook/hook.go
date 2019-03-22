@@ -47,45 +47,47 @@ func NewGinHook(bh BeforeHandle, ah AfterHandle, fh FailHandler, eh ErrorHandler
 	}
 }
 
-func (gh *GinHook) HandlerFunc() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		hc := newHttpContext(c)
-		
-		e1, e2 := gh.bh(hc)
-		if e1 != nil {
-			// 非致命错误
-			gh.eh(hc, e1, false)
-		}
-		if e2 != nil {
-			// 致命错误
-			gh.eh(hc, e2, true)
-			
-			if gh.fh(hc, e2) != nil {
-				c.Abort()
-			} else {
-				// 致命错误恢复
-				// 执行下一个gin节点
-			}
-		}
-		
-		c.Next()
-		
-		e1, e2 = gh.ah(hc)
-		if e1 != nil {
-			// 非致命错误
-			gh.eh(hc, e1, false)
-		}
-		if e2 != nil {
-			// 致命错误
-			gh.eh(hc, e2, true)
-			
-			if gh.fh(hc, e2) != nil {
-				c.Abort()
-			} else {
-				// 致命错误恢复
-				// 执行下一个gin节点
-			}
-		}
-		
+func (gh *GinHook) handlerFunc(c *gin.Context) {
+	hc := newHttpContext(c)
+	
+	e1, e2 := gh.bh(hc)
+	if e1 != nil {
+		// 非致命错误
+		gh.eh(hc, e1, false)
 	}
+	if e2 != nil {
+		// 致命错误
+		gh.eh(hc, e2, true)
+		
+		if gh.fh(hc, e2) != nil {
+			c.Abort()
+		} else {
+			// 致命错误恢复
+			// 执行下一个gin节点
+		}
+	}
+	
+	c.Next()
+	
+	e1, e2 = gh.ah(hc)
+	if e1 != nil {
+		// 非致命错误
+		gh.eh(hc, e1, false)
+	}
+	if e2 != nil {
+		// 致命错误
+		gh.eh(hc, e2, true)
+		
+		if gh.fh(hc, e2) != nil {
+			c.Abort()
+		} else {
+			// 致命错误恢复
+			// 执行下一个gin节点
+		}
+	}
+	
+}
+
+func (gh *GinHook) HandlerFunc() gin.HandlerFunc {
+	return gh.handlerFunc
 }
