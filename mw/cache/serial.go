@@ -2,7 +2,7 @@ package cache
 
 import (
 	"github.com/json-iterator/go"
-	"ginHook/hook"
+	"git.corp.chaolian360.com/lrf123456/GinMW/hook"
 )
 
 type IRequestSerializer interface {
