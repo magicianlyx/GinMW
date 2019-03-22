@@ -18,7 +18,7 @@ type RedisCache struct {
 	cli       *redis.Client
 }
 
-func InitRedisCache(second int, host string, port int, db int, password string, poolsize int) (*RedisCache, error) {
+func InitRedisCache(host string, port int, db int, password string, poolsize int, second int) (*RedisCache, error) {
 	rc := &RedisCache{}
 	rc.validTime = second
 	opt := &redis.Options{
