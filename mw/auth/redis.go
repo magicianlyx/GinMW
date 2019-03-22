@@ -13,7 +13,7 @@ type User struct {
 
 // 生成副本
 func (u *User) Clone() User {
-	if u == nil{
+	if u == nil {
 		return User{}
 	}
 	allPermission := make([]string, len(u.AllPermission))
@@ -30,16 +30,16 @@ type IUserInfoRead interface {
 	GetUserInfo(string) (*User, error)
 }
 
-type redisClient struct {
+type RedisUserInfoRead struct {
 	client *redis.Client
 }
 
-func InitRedis(cli *redis.Client) (*redisClient) {
-	return &redisClient{cli}
+func NewRedisUserInfoRead(cli *redis.Client) (*RedisUserInfoRead) {
+	return &RedisUserInfoRead{cli}
 }
 
 // 获取需要的部分user数据
-func (c *redisClient) GetUserInfo(phpsessid string) (*User, error) {
+func (c *RedisUserInfoRead) GetUserInfo(phpsessid string) (*User, error) {
 	mss, err := c.client.HGetAll(phpsessid).Result()
 	if err != nil {
 		return nil, ErrRedisData
@@ -59,5 +59,5 @@ func (c *redisClient) GetUserInfo(phpsessid string) (*User, error) {
 		ru.Role,
 		ru.AllPermission,
 	}, nil
-	
+
 }

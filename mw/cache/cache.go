@@ -1,15 +1,13 @@
 package cache
 
-
 import (
 	"time"
 	"github.com/patrickmn/go-cache"
 	"github.com/go-redis/redis"
 	"strconv"
-	"errors"
 )
 
-type ICache interface {
+type IMWCache interface {
 	Set(key string, v []byte) (error)
 	Get(key string) ([]byte, error)
 	Del(key string)
@@ -20,7 +18,7 @@ type RedisCache struct {
 	cli       *redis.Client
 }
 
-func InitRedisCache(second int, host string, port int, db int, password string, poolsize int) (*RedisCache, error) {
+func InitRedisCache(host string, port int, db int, password string, poolsize int, second int) (*RedisCache, error) {
 	rc := &RedisCache{}
 	rc.validTime = second
 	opt := &redis.Options{
@@ -75,7 +73,7 @@ func (mc *MemCache) Get(key string) ([]byte, error) {
 	if ok {
 		return v.([]byte), nil
 	} else {
-		return nil, errors.New("record not found")
+		return nil, ErrCacheNoRecord
 	}
 }
 

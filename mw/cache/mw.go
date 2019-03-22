@@ -9,7 +9,7 @@ type MWCache struct {
 	ginHook *hook.GinHook
 }
 
-func NewMWCache(cache ICache, serializer ISerializer, eh hook.ErrorHandler) (*MWCache, error) {
+func NewMWCache(cache IMWCache, serializer ISerializer, eh hook.ErrorHandler) (*MWCache, error) {
 	if cache == nil || serializer == nil {
 		return nil, ErrParameter
 	}

@@ -12,6 +12,14 @@ type HttpRequest struct {
 	Path   string
 	Header http.Header
 	Body   []byte
+	c      *gin.Context
+}
+
+func (hr *HttpRequest) Cookie(name string) (string, error) {
+	return hr.c.Cookie(name)
+}
+func (hr *HttpRequest) Query(key string) (string) {
+	return hr.c.Query(key)
 }
 
 type HttpResponse struct {
