@@ -1,12 +1,10 @@
 package cache
 
-
 import (
 	"time"
 	"github.com/patrickmn/go-cache"
 	"github.com/go-redis/redis"
 	"strconv"
-	"errors"
 )
 
 type IMWCache interface {
@@ -75,7 +73,7 @@ func (mc *MemCache) Get(key string) ([]byte, error) {
 	if ok {
 		return v.([]byte), nil
 	} else {
-		return nil, errors.New("record not found")
+		return nil, ErrCacheNoRecord
 	}
 }
 
