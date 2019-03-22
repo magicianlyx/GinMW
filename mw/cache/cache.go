@@ -73,7 +73,7 @@ func (mc *MemCache) Get(key string) ([]byte, error) {
 	if ok {
 		return v.([]byte), nil
 	} else {
-		return nil, ErrCacheNoRecord
+		return nil,
 	}
 }
 

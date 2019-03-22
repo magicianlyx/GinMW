@@ -220,5 +220,6 @@ func (hc *HttpContext) GetRequestInfo() (*HttpRequest, error) {
 		path,
 		header,
 		body,
+		c,
 	}, nil
 }
