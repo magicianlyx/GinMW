@@ -18,6 +18,9 @@ type HttpRequest struct {
 func (hr *HttpRequest) Cookie(name string) (string, error) {
 	return hr.c.Cookie(name)
 }
+func (hr *HttpRequest) Query(key string) (string) {
+	return hr.c.Query(key)
+}
 
 type HttpResponse struct {
 	Proto      string
