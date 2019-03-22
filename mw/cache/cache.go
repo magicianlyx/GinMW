@@ -9,7 +9,7 @@ import (
 	"errors"
 )
 
-type ICache interface {
+type IMWCache interface {
 	Set(key string, v []byte) (error)
 	Get(key string) ([]byte, error)
 	Del(key string)
