@@ -1,6 +1,5 @@
 package auth
 
-
 // 路由权限标识表
 var PathTag = map[string]string{
 	// // 超管
@@ -15,7 +14,7 @@ var PathTag = map[string]string{
 	// "admin:/api/dataform/v1/sourceAnalysisForDate":  "150600",
 	// "admin:/api/dataform/v1/sourceAnalysisForShop":  "150600",
 	// "admin:/api/dataform/v1/sourceList":             "150600",
-	
+
 	// 普通
 	"/api/dataform/v1/summary":                           "270600",
 	"/api/dataform/v1/trend":                             "270600",
