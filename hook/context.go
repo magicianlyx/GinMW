@@ -163,25 +163,26 @@ func (hc *HttpContext) GetResponseInfo() (*HttpResponse, error) {
 		header,
 		body,
 		status,
+		c,
 	}, nil
 }
 
 func (hc *HttpContext) Restore(hr *HttpResponse) error {
 	c := hc.GetGinContext()
-	
+
 	// body
 	_, err := c.Writer.Write(hr.Body)
 	if err != nil {
 		return ErrGinWriterInvalid
 	}
-	
+
 	// header
 	for k, vals := range hr.Header {
 		for _, v := range vals {
 			c.Writer.Header().Set(k, v)
 		}
 	}
-	
+
 	// status
 	c.Status(hr.StatusCode)
 	return nil
@@ -191,12 +192,12 @@ func (hc *HttpContext) GetRequestInfo() (*HttpRequest, error) {
 	c := hc.GetGinContext()
 	rw := initResponseWrite(c.Writer)
 	c.Writer = rw
-	
+
 	proto := c.Request.Proto
 	method := c.Request.Method
 	host := c.Request.Host
 	path := c.Request.URL.Path
-	
+
 	body, err := c.GetRawData()
 	defer func() {
 		c.Request.Body = ioutil.NopCloser(bytes.NewReader(body))
@@ -204,14 +205,14 @@ func (hc *HttpContext) GetRequestInfo() (*HttpRequest, error) {
 	if err != nil {
 		return nil, ErrGinRequestData
 	}
-	
+
 	header := http.Header{}
 	for k, vals := range c.Request.Header {
 		for _, v := range vals {
 			header.Set(k, v)
 		}
 	}
-	
+
 	return &HttpRequest{
 		proto,
 		method,
@@ -219,5 +220,6 @@ func (hc *HttpContext) GetRequestInfo() (*HttpRequest, error) {
 		path,
 		header,
 		body,
+		c,
 	}, nil
 }
