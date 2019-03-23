@@ -18,7 +18,7 @@ type RedisCache struct {
 	cli       *redis.Client
 }
 
-func InitRedisCache(host string, port int, db int, password string, poolsize int, second int) (*RedisCache, error) {
+func NewRedisCache(host string, port int, db int, password string, poolsize int, second int) (*RedisCache, error) {
 	rc := &RedisCache{}
 	rc.validTime = second
 	opt := &redis.Options{
@@ -56,10 +56,9 @@ type MemCache struct {
 	cache *cache.Cache
 }
 
-func InitMemCache(second int) (*MemCache) {
+func NewMemCache(second int) (*MemCache) {
 	validTime := time.Second * time.Duration(second)
-	mc := &MemCache{}
-	mc.cache = cache.New(validTime, validTime)
+	mc := &MemCache{cache.New(validTime, validTime)}
 	return mc
 }
 
