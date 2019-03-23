@@ -15,11 +15,13 @@ type HttpRequest struct {
 	c      *gin.Context
 }
 
+func (hr *HttpRequest) Query(key string) string {
+	hr.c.para
+	return hr.c.Query(key)
+}
+
 func (hr *HttpRequest) Cookie(name string) (string, error) {
 	return hr.c.Cookie(name)
-}
-func (hr *HttpRequest) Query(key string) (string) {
-	return hr.c.Query(key)
 }
 
 type HttpResponse struct {

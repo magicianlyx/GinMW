@@ -35,7 +35,7 @@ type IHookContext interface {
 	IHookContextWrite
 }
 
-// gin.context 接口
+// gin.context 及相关操作 接口
 type IGinContext interface {
 	GetGinContext() *gin.Context
 	GetResponseInfo() (*HttpResponse, error)
@@ -51,7 +51,7 @@ type IHttpContext interface {
 
 type HttpContext struct {
 	hookContext map[string]interface{} // 创建一个gin以外的context 不污染gin context中的字典
-	ginc        *gin.Context
+	*gin.Context
 }
 
 func newHttpContext(c *gin.Context) *HttpContext {
@@ -148,7 +148,7 @@ func (c *HttpContext) GetHookStringMapStringSlice(key string) (smss map[string][
 }
 
 func (c *HttpContext) GetGinContext() *gin.Context {
-	return c.ginc
+	return c.Context
 }
 
 func (hc *HttpContext) GetResponseInfo() (*HttpResponse, error) {
@@ -163,7 +163,6 @@ func (hc *HttpContext) GetResponseInfo() (*HttpResponse, error) {
 		header,
 		body,
 		status,
-		c,
 	}, nil
 }
 
@@ -220,6 +219,5 @@ func (hc *HttpContext) GetRequestInfo() (*HttpRequest, error) {
 		path,
 		header,
 		body,
-		c,
 	}, nil
 }
