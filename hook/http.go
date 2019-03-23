@@ -16,7 +16,6 @@ type HttpRequest struct {
 }
 
 func (hr *HttpRequest) Query(key string) string {
-	hr.c.para
 	return hr.c.Query(key)
 }
 
