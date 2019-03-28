@@ -3,6 +3,7 @@ package hook
 import (
 	"net/http"
 	"github.com/gin-gonic/gin"
+	"net/url"
 )
 
 type HttpRequest struct {
@@ -12,14 +13,19 @@ type HttpRequest struct {
 	Path   string
 	Header http.Header
 	Body   []byte
+	Query  url.Values
 	c      *gin.Context
 }
 
-func (hr *HttpRequest) Query(key string) string {
+func (hr *HttpRequest) GetParam(key string) string {
+	return hr.c.Param(key)
+}
+
+func (hr *HttpRequest) GetQuery(key string) string {
 	return hr.c.Query(key)
 }
 
-func (hr *HttpRequest) Cookie(name string) (string, error) {
+func (hr *HttpRequest) GetCookie(name string) (string, error) {
 	return hr.c.Cookie(name)
 }
 
