@@ -11,7 +11,7 @@ type MWCache struct {
 
 func NewMWCache(cache IMWCache, serializer ISerializer, eh hook.ErrorHandler) (*MWCache, error) {
 	if cache == nil || serializer == nil {
-		return nil, ErrParameter
+		return &MWCache{hook.NewGinHook(nil, nil, nil, nil)}, ErrParameter
 	}
 	
 	bh := func(c hook.IHttpContext) (error, error) {
