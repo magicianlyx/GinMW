@@ -9,9 +9,9 @@ type IMW interface {
 }
 
 type GinHook struct {
-	bh BeforeHandle
-	ah AfterHandle
-	fh FailHandler  // 致命错误 一般会处理http的响应结果
+	bh BeforeHandle // BeforeHandle func(c IHttpContext) (e1 error,e2 error) 进入节点前处理；e1不为空时执行eh；e2不为空时执行eh和fh
+	ah AfterHandle  // AfterHandle func(c IHttpContext) (e1 error,e2 error) 进入节点后处理；e1不为空时执行eh；e2不为空时执行eh和fh
+	fh FailHandler  //  func(c IHttpContext, err error)(e error) 致命错误 一般会处理http的响应结果 然后终止http请求，如果e返回空可以从致命错误中恢复
 	eh ErrorHandler // 所有错误 一般实现逻辑是打印日志
 }
 
