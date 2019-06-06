@@ -3,6 +3,10 @@ package auth
 import (
 	"github.com/gin-gonic/gin"
 	"git.corp.chaolian360.com/lrf123456/GinMW/hook"
+	"github.com/go-redis/redis"
+	"fmt"
+	"strings"
+	"github.com/json-iterator/go"
 )
 
 type User struct {
@@ -27,14 +31,114 @@ func (u *User) Clone() User {
 	}
 }
 
+// 根据http请求获取session
+type IGetSession interface {
+	GetSession(c *gin.Context) (session string, err error)
+}
+
+type GetSession struct {
+}
+
+func (*GetSession) GetSession(c *gin.Context) (session string, err error) {
+	sessid, err := c.Cookie("PHPSESSID")
+	if err != nil {
+		return "", ErrNoSessionId
+	} else {
+		return sessid, nil
+	}
+}
+
 // 根据session获取用户权限
 type IGetUserInfo interface {
 	GetUserInfo(sessionID string) (*User, error)
 }
 
-// 根据请求获取标识符
-type IGetRequestTag interface {
-	GetTagByUrl(c *gin.Context) (tag string)
+type UserInfo struct {
+	client *redis.Client
+}
+
+func NewUserInfo(client *redis.Client) (*UserInfo, error) {
+	if err := client.Ping().Err(); err != nil {
+		return nil, ErrRedisDisConnect
+	}
+	return &UserInfo{client: client}, nil
+}
+
+// 获取需要的部分user数据
+func (c *UserInfo) GetUserInfo(phpsessid string) (*User, error) {
+	mss, err := c.client.HGetAll(phpsessid).Result()
+	if err != nil {
+		return nil, ErrRedisData
+	}
+	ru, err := DecodeRedisUser(mss, []int{
+		PickSelfId,
+		PickUserId,
+		PickRole,
+		PickAllPermission,
+	})
+	if err != nil {
+		return nil, ErrRedisData
+	}
+	return &User{
+		ru.SelfId,
+		ru.UserId,
+		ru.Role,
+		ru.AllPermission,
+	}, nil
+}
+
+// 根据请求编码url标识
+type IEncodeUrl interface {
+	EncodeUrl(c *gin.Context) (url string)
+}
+
+type EncodeUrlWithUrl struct {
+}
+
+func (*EncodeUrlWithUrl) EncodeUrl(c *gin.Context) (url string) {
+	return fmt.Sprintf("%s", c.Request.URL.Path)
+}
+
+type EncodeUrlWithUrlMethod struct {
+}
+
+func (*EncodeUrlWithUrlMethod) EncodeUrl(c *gin.Context) (url string) {
+	return fmt.Sprintf("%s:%s", c.Request.URL.Path, strings.ToLower(c.Request.Method))
+}
+
+// 根据url获取标识符
+type ITagUrl interface {
+	GetTagByUrl(url string) (tag string, err error)
+}
+
+type TagUrlFromRedis struct {
+	client *redis.Client
+}
+
+func NewTagUrlFromRedis(client *redis.Client) (*TagUrlFromRedis, error) {
+	if err := client.Ping().Err(); err != nil {
+		return nil, ErrRedisDisConnect
+	}
+	return &TagUrlFromRedis{client: client}, nil
+}
+
+func (t *TagUrlFromRedis) GetTagByUrl(url string) (tag string, err error) {
+	val, err := t.client.Get("sqlNode").Result()
+	if err != nil {
+		return "", ErrRedisData
+	} else {
+		vMap := map[string]string{}
+		err = jsoniter.UnmarshalFromString(val, &vMap)
+		if err != nil {
+			return "", ErrRedisData
+		}
+		for k, v := range vMap {
+			if url == v {
+				return k, nil
+			}
+		}
+		return "", ErrRedisData
+	}
 }
 
 // 日志打印接口
@@ -45,25 +149,17 @@ type ILog interface {
 
 // 接入控制
 type IAccessController interface {
-	GetTagByUrl(c *gin.Context) (tag string)
-	GetUserInfo(sessionID string) (*User, error)
-	AccessLog(user *User, session string)
-	UnAccessLog(user *User, session string)
-	UnAuthResponse(u *User, err error) interface{}
+	GetSession(c *gin.Context) (session string, err error) // 根据http请求获取session
+	EncodeUrl(c *gin.Context) (url string)                 // 编码url
+	GetTagByUrl(url string) (tag string)                   // 根据url获取表示值
+	GetUserInfo(sessionID string) (*User, error)           // 根据session获取用户信息
+	AccessLog(user *User, session string)                  // 打印接入日志
+	UnAccessLog(user *User, session string)                // 打印禁止接入日志
+	UnAuthResponse(u *User, err error) interface{}         // 控制禁止接入时返回的json数据
 }
 
 type MWAccessControlCenter struct {
 	ginHook *hook.GinHook
-}
-
-func getSession(c *gin.Context) (sessionID string, err error) {
-	
-	sessid, err := c.Cookie("PHPSESSID")
-	if err != nil {
-		return "", ErrNoSessionId
-	} else {
-		return sessid, nil
-	}
 }
 
 func NewMWAccessControlCenter(iac IAccessController) (*MWAccessControlCenter) {
@@ -80,7 +176,7 @@ func NewMWAccessControlCenter(iac IAccessController) (*MWAccessControlCenter) {
 	}
 	
 	bh := func(c hook.IHttpContext) (error, error) {
-		session, err := getSession(c.GetGinContext())
+		session, err := iac.GetSession(c.GetGinContext())
 		if err != nil {
 			// 获取session失败
 			// 接入失败
@@ -88,7 +184,9 @@ func NewMWAccessControlCenter(iac IAccessController) (*MWAccessControlCenter) {
 			return nil, ErrNoSessionId
 		}
 		
-		tag := iac.GetTagByUrl(c.GetGinContext())
+		url := iac.EncodeUrl(c.GetGinContext())
+		
+		tag := iac.GetTagByUrl(url)
 		if tag == "" {
 			// 无法获取url的tag
 			// 接入失败
