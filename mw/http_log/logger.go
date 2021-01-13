@@ -68,7 +68,7 @@ func mergeBytes(datas ...[]byte) []byte {
 func mergeHeader(headers http.Header) []byte {
 	r := make([]byte, 0)
 	for k := range headers {
-		t := []byte(fmt.Sprintf("%v:%v%v%v", k, headers[k], enter, feed))
+		t := []byte(fmt.Sprintf("%s:%s%s%s", k, headers[k], enter, feed))
 		r = append(r, t...)
 	}
 	return r
